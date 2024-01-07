@@ -1,10 +1,33 @@
 ## HutechCTF
 
 File Output:
-![[Pasted image 20231231001114.png]]
+
+	*hint: chon hutech chon thanh cong 
+	
+	ciphertext = d6efdee7f255b95a6f7c80b1ff63d5bc431068ae6b7e9200a49d0cffad8e6915d153280d0f368fc6c4c071b750d7bbe0
+	key = b'\x17\x00\x06\x1d\x01\x06\x1f\x00\x1a+\x11\x11\x1f\x1a\x1bZ'
 
 File Code:
-![[Pasted image 20231231001252.png]]
+
+	from Crypto.Cipher import AES
+	from Crypto.Util.Padding import pad, unpad
+	
+	def encode_FLAG(key,flag):
+		pading = lambda s: pad(s,16)
+		msg = pading(flag)
+		cipher = AES.new(key, AES.MODE_ECB)
+		ciphertext = cipher.encrypt(msg).hex()
+		return ciphertext
+	
+	flag = b'redacted'
+	key = b'redacted'
+	ciphertext = encode_FLAG(key, flag)
+	ct =  b'redacted'
+	key = bytes(x ^ y for x, y in zip(key,ct))
+	
+	print('ciphertext =',ciphertext)
+	print('key =', key)
+
 
 Trước khi thực hiện giải chúng ta phân tích xem flag đã bị mã hóa 
 	 Đoạn code trên có vẻ như sử dụng mã hóa AES để mã hóa một flag và sau đó thực hiện một phép XOR giữa key và một giá trị ct nào đó.
@@ -16,15 +39,33 @@ Dễ thấy code ta thấy rằng việc mã hóa từ flag -> ciphertext dựa 
 	về. 
 
 Sau khi thực hiện quá trình encrypt flag thì key bị làm thay đổi, key thay đổi bằng: 
-	key = bytes(x ^ y for x, y in zip(key,ct))
-	
-		Dòng code này thực hiện phép XOR giữa key và một giá trị 
-	ct, sau đó gán lại kết quả vào biến key rồi thực hiện in ra key mới.
+	key = bytes(x ^ y for x, y in zip(key,ct))	
++ Dòng code này thực hiện phép XOR giữa key và một giá trị ct, sau đó gán lại kết quả vào biến key rồi thực hiện in ra key mới.
 
 
 
 Code Decrypt:
-![[Pasted image 20231231002740.png]]
+
+	from Crypto.Cipher import AES
+	from Crypto.Util.Padding import unpad
+	
+	def decode_FLAG(key, ciphertext_hex):
+	    cipher = AES.new(key, AES.MODE_ECB)
+	    ciphertext = bytes.fromhex(ciphertext_hex)
+	    decrypted = cipher.decrypt(ciphertext)
+	    return unpad(decrypted, 16).decode('utf-8')
+	
+	def xor_bytes(b1, b2):
+	    return bytes(x ^ y for x, y in zip(b1, b2))
+	
+	ciphertext_hex = 'd6efdee7f255b95a6f7c80b1ff63d5bc431068ae6b7e9200a49d0cffad8e6915d153280d0f368fc6c4c071b750d7bbe0'
+	key = b'\x17\x00\x06\x1d\x01\x06\x1f\x00\x1a+\x11\x11\x1f\x1a\x1bZ'
+	ct = b'chonhutechchonthanhcong'
+	
+	reversed_key = xor_bytes(key, ct)
+	plaintext = decode_FLAG(reversed_key, ciphertext_hex)
+	print('Decrypted plaintext:', plaintext)
+	print('Reversed key:', reversed_key)
 
 Giải thích 1 chút về code này nó hoạt động như nào nhé:
 
