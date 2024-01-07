@@ -110,7 +110,7 @@ Step 5. In ra kết quả của phi và sum.
               print(plaintext)
 
 
-- Các bạn nhớ sửa đường dẫn vào file nhé. File output cũng phải sửa (Sửa bằng cách: xóa phi, sum, enc =. Sau đó thêm dấu ',' vào mỗi cuối 1 giá trị enc đến hết nhé)
+- Các bạn nhớ sửa đường dẫn vào file nhé. File output cũng phải sửa (Sửa bằng cách: xóa phi, sum, "enc =." Sau đó thêm dấu ',' vào mỗi cuối 1 giá trị enc đến hết nhé)
 
 - Giờ thì giải thích sao mình lại làm vậy nha:
   + Mình cho python đọc cái file rồi lưu tất cả các dữ liệu có bên trong thành dạng 1 list ( Mình lưu thành list để nó mặc định kiểu dữ liệu các phần tử thuộc kiểu int luôn cho dễ làm và chatGPT nó gợi ý như thế :>> )
@@ -119,7 +119,7 @@ Step 5. In ra kết quả của phi và sum.
   + Hàm để decrypt_and_combine để decrypt RSA. Mình decrypt các các giá trị có trong list enc rồi đổi nó về kí tự tương ứng
   
 - Do đề bài set key assert key>0 and key<10 nên key sẽ là key >= 1 và k <= 9 (key ở đây là độ dịch chuyển của hàm shift ấy). Khúc này cũng không có gì đáng nói nhiều ha
-      + Cho key chạy từ 1 đến 9 bằng, sau đó thực hiện việc gọi hàm reverse_shift chạy lấy lại plaintext
+      + Cho key chạy từ 1 đến 9, sau đó thực hiện việc gọi hàm reverse_shift chạy lấy lại plaintext
 
   - Do in được quá nhiều plaintext nên phải lựa xem cái nào đúng, đem từng cái lên CyberChef xem coi cái nào chuyển được từ Base64 về Ascii là cái đó là đúng
  
