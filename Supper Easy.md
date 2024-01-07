@@ -48,10 +48,15 @@ File code:
 
 - Đọc và phân tích code nhé:
 Step 1. Tạo hai số nguyên tố p và q có độ dài 1024 bit sử dụng thư viện Crypto.Util.number.
+
 Step 2. Tính giá trị của phi và sum dựa trên p và q.
+
 Step 3. Mã hóa chuỗi flag sử dụng hàm shift với một khóa được xác định trước.
+
 Step 4. Sử dụng hàm crypt_two để mã hóa chuỗi đã được dịch chuyển với p và q.
+
 Step 5. In ra kết quả của phi và sum.
+
 <Nói nhanh gọn lẹ thì flag sẽ áp dụng mã hóa cổ điển Ceaser Cipher để dịch thành 1 đoạn kí tự mới, đoạn kí tự vừa nhập đem đi mã hóa bằng RSA>
 
 - Đã có phi = (p -1)*(q - 1) và sum = p + q nên ta dễ dàng tính ra p và q ha ** Do mình lười code trên kali linux nên mình nhờ người khác tính hộ rồi lấy giá trị p và q luôn =))) **
@@ -78,7 +83,7 @@ Step 5. In ra kết quả của phi và sum.
                   FLAG += char
           return FLAG
       
-      with open(r'Decrypt CTF\output.txt', 'r') as file:
+      with open(r'Decrypt CTF\output_debai.txt', 'r') as file:
           data = file.read()
       
       enc = list(map(int, data.split(',')))
@@ -99,8 +104,26 @@ Step 5. In ra kết quả của phi và sum.
           return ciphertext
       
       ciphertext = decrypt_and_combine(enc, d, N)
-      print(ciphertext)
       
       for k in range(1, 10):
               plaintext = reverse_shift(ciphertext, k)
               print(plaintext)
+
+
+- Các bạn nhớ sửa đường dẫn vào file nhé. File output cũng phải sửa (Sửa bằng cách: xóa phi, sum, enc =. Sau đó thêm dấu ',' vào mỗi cuối 1 giá trị enc đến hết nhé)
+
+- Giờ thì giải thích sao mình lại làm vậy nha:
+  + Mình cho python đọc cái file rồi lưu tất cả các dữ liệu có bên trong thành dạng 1 list ( Mình lưu thành list để nó mặc định kiểu dữ liệu các phần tử thuộc kiểu int luôn cho dễ làm và chatGPT nó gợi ý như thế :>> )
+    
+- Do chương trình được tạo mã theo thứ tự Ceaser Cipher -> RSA nên giờ mình làm từ RSA đến Ceaser Cipher nhé:
+  + Hàm để decrypt_and_combine để decrypt RSA. Mình decrypt các các giá trị có trong list enc rồi đổi nó về kí tự tương ứng
+  
+- Do đề bài set key assert key>0 and key<10 nên key sẽ là key >= 1 và k <= 9 (key ở đây là độ dịch chuyển của hàm shift ấy). Khúc này cũng không có gì đáng nói nhiều ha
+      + Cho key chạy từ 1 đến 9 bằng, sau đó thực hiện việc gọi hàm reverse_shift chạy lấy lại plaintext
+
+  - Do in được quá nhiều plaintext nên phải lựa xem cái nào đúng, đem từng cái lên CyberChef xem coi cái nào chuyển được từ Base64 về Ascii là cái đó là đúng
+ 
+  - Khi đó ta thu được flag là: HUTECH_CTF{SFVURUNIX0NURntUaGlzX2lzX2Zha2VfZmxhZzo8fQ==}
+        + Câu này không in ra được Form flag HUTECH_CTF nên mình phải tự thêm vào 
+
+  
